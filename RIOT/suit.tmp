@@ -1,0 +1,17 @@
+{
+    "manifest-version": 1,
+    "manifest-sequence-number": 1,
+    "components": [
+        {
+            "install-id": [
+                "ram",
+                "0"
+            ],
+            "vendor-id": "547d0d746d3a5a9296624881afd9407b",
+            "class-id": "bcc90984fe7d562bb4c9a24f26a3a9cd",
+            "file": "coaproot/payload.bin",
+            "uri": "coap://[2001:db8::1]/payload.bin",
+            "bootable": false
+        }
+    ]
+}

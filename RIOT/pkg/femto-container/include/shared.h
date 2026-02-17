@@ -1,0 +1,173 @@
+/*
+ * Copyright (C) 2020 Inria
+ * Copyright (C) 2020 Koen Zandberg <koen@bergzand.net>
+ *
+ * This file is subject to the terms and conditions of the GNU Lesser
+ * General Public License v2.1. See the file LICENSE in the top level
+ * directory for more details.
+ */
+
+#ifndef BPF_SHARED_H
+#define BPF_SHARED_H
+
+#include <stdint.h>
+#include <stddef.h>
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+#define __bpf_shared_ptr(type, name)    \
+union {                 \
+    type name;          \
+    uint64_t :64;          \
+} __attribute__((aligned(8)))
+
+enum {
+    /* Aux helper functions (stdlib) */
+    BPF_FUNC_BPF_PRINTF = 0x01,
+    BPF_FUNC_BPF_POINTER_GET_ELEMENT = 0x04,
+    BPF_FUNC_BPF_POINTER_ELEMENT_POINTER = 0x05,
+    BPF_FUNC_BPF_POINTER_SET_ELEMENT = 0x06,
+    BPF_FUNC_BPF_TRICKLE_RESET_TIMER = 0x07,
+    BPF_FUNC_BPF_TRICKLE_INCRE_TIMER = 0x08,
+    BPF_FUNC_BPF_TRICKLE_START_TIMER = 0x0d,
+    BPF_FUNC_BPF_BYTEORDER_NTOHS = 0x09,
+    BPF_FUNC_BPF_BYTEORDER_HTONS = 0x0a,
+    BPF_FUNC_BPF_BYTEORDER_NTOHL = 0x0b,
+    BPF_FUNC_BPF_BYTEORDER_HTONL = 0x0c,
+    BPF_FUNC_BPF_TRIGGER_HOOK = 0x0f,
+    
+
+    /* Key/value store functions */
+    BPF_FUNC_BPF_STORE_LOCAL = 0x10,
+    BPF_FUNC_BPF_STORE_GLOBAL = 0x11,
+    BPF_FUNC_BPF_FETCH_LOCAL = 0x12,
+    BPF_FUNC_BPF_FETCH_GLOBAL = 0x13,
+    BPF_FUNC_BPF_MEMCPY = 0x14,
+    BPF_FUNC_BPF_MALLOC = 0x15,
+    BPF_FUNC_BPF_MEMCMP = 0x16,
+    BPF_FUNC_BPF_MEMSET = 0x17,
+    BPF_FUNC_BPF_FREE = 0x18,
+
+    /* Event Timer */
+    BPF_FUNC_BPF_EVTIMER_ADD_DEL = 0x20,
+    BPF_FUNC_BPF_EVTIMER_ADD_MSG = 0x21,
+
+    /* Time(r) functions */
+
+    /* Saul functions */
+
+    /* (g)coap functions */
+    
+
+    /* ZTIMER */
+    BPF_FUNC_BPF_ZTIMER_NOW = 0x60,
+    BPF_FUNC_BPF_ZTIMER_PERIODIC_WAKEUP = 0x61,
+    BPF_FUNC_BPF_NOW_MS = 0x62,
+
+
+
+    /*GNRC*/
+    /*PKTBUF*/
+    // MALLOC
+    BPF_FUNC_BPF_GNRC_PKT_BUFF_START_WRITE_MALLOC = 0x70,
+    BPF_FUNC_BPF_GNRC_PKT_BUFF_RELEASE_MALLOC = 0x71,
+    BPF_FUNC_BPF_GNRC_PKT_BUFF_MARK_MALLOC = 0x72,
+    
+    // STATIC
+    BPF_FUNC_BPF_GNRC_PKT_BUFF_START_WRITE_STATIC = 0x73,
+    BPF_FUNC_BPF_GNRC_PKT_BUFF_RELEASE_STATIC = 0x74,
+    BPF_FUNC_BPF_GNRC_PKT_BUFF_MARK_STATIC = 0x75,
+    BPF_FUNC_BPF_GNRC_PKT_BUFF_ADD_STATIC = 0x76,
+
+    /*PKT*/
+    BPF_FUNC_BPF_GNRC_PKT_SEARCH_TYPE = 0x80,
+    BPF_FUNC_BPF_GNRC_PKT_GET_TYPE = 0x81,
+    BPF_FUNC_BPF_GNRC_PKT_GET_SIZE = 0x82,
+    BPF_FUNC_BPF_GNRC_PKT_GET_NEXT = 0x83,
+    BPF_FUNC_BPF_GNRC_PKT_GET_DATA = 0x84,
+    BPF_FUNC_BPF_GNRC_PKT_SET_TYPE = 0x85,
+    BPF_FUNC_BPF_GNRC_PKT_SET_NEXT = 0x86,
+    BPF_FUNC_BPF_GNRC_PKT_GET_UDP_HCSUM = 0x87,
+    BPF_FUNC_BPF_GNRC_PKT_GET_UDP_DST_PORT = 0x88,
+    BPF_FUNC_BPF_GNRC_PKT_SET_UDP_LEN = 0x89,
+    BPF_FUNC_BPF_GNRC_PKT_GET_PKT_LEN = 0x8a,
+
+    /*Cross*/
+    BPF_FUNC_BPF_GNRC_CALC_UDP_CSUM = 0x90,
+    BPF_FUNC_BPF_CALC_CSUM = 0x91,
+    BPF_FUNC_BPF_ICMPV6_BUILD = 0x92,
+
+    /*NETAPI*/
+    BPF_FUNC_BPF_GNRC_NETAPI_DISPATCH_SEND = 0xa0,
+    BPF_FUNC_BPF_GNRC_NETAPI_DISPATCH_RX = 0xa1,
+
+    /*RPL*/
+    BPF_FUNC_BPF_GNRC_RPL_GET_INSTANCE_BY_INDEX = 0xb0,
+    BPF_FUNC_BPF_GNRC_RPL_GET_INSTANCE_BY_ID = 0xba,
+    BPF_FUNC_BPF_GNRC_RPL_INSTANCE_ADD = 0xb1,
+    BPF_FUNC_BPF_GNRC_RPL_INSTANCE_REM = 0xb2,
+    BPF_FUNC_BPF_GNRC_RPL_DODAG_INIT = 0xb3,
+    BPF_FUNC_BPF_GNRC_RPL_PARENT_ADD_ADDR = 0xb4,
+    BPF_FUNC_BPF_GNRC_RPL_PARENT_REMOVE = 0xb5,
+    BPF_FUNC_BPF_GNRC_RPL_PARENT_UPDATE= 0xb6,
+    BPF_FUNC_BPF_GNRC_RPL_LOCAL_REPAIR = 0xb7,
+    BPF_FUNC_BPF_GNRC_RPL_DELAY_DAO = 0xb8,
+    BPF_FUNC_BPF_GNRC_RPL_GET_OF_FOR_OCP = 0xb9,
+    BPF_FUNC_BPF_RPL_SEND = 0xbb,
+    BPF_FUNC_BPF_RPL_INIT = 0xbc,
+    BPF_FUNC_BPF_RPL_SET_IS_ROOT = 0xbd,
+    BPF_FUNC_BPF_RPL_SET_ROOT_DODAG_ID = 0xbe,
+    BPF_FUNC_BPF_RPL_MODE = 0xe0,
+
+
+    /*IPV6*/
+    BPF_FUNC_BPF_IPV6_ADDR_IS_MULTICAST = 0xc0,
+    BPF_FUNC_BPF_IPV6_ADDR_SET_IID = 0xc1,
+    BPF_FUNC_BPF_GNRC_IPV6_NIB_PL_SET = 0xc2,
+    BPF_FUNC_BPF_GNRC_IPV6_NIB_FT_ADD = 0xc3,
+    BPF_FUNC_BPF_GNRC_IPV6_NIB_FT_DEL = 0xc4,
+    BPF_FUNC_BPF_GNRC_IPV6_NIB_FT_ITER = 0xca,
+    BPF_FUNC_BPF_GNRC_IPV6_NIB_PL_ITER = 0xc9,
+
+    BPF_FUNC_BPF_GNRC_SR_DELETE_ROUTE = 0xc5,
+    BPF_FUNC_BPF_GNRC_SR_ADD_NEW_DST = 0xc6,
+    BPF_FUNC_BPF_GNRC_SR_INIIT_TABLE = 0xc7,
+    BPF_FUNC_BPF_GNRC_SR_DEINIIT_TABLE = 0xe3,
+
+    BPF_FUNC_BPF_IPV6_ADDR_INIT_PREIFX = 0xc8,
+    BPF_FUNC_BPF_IPV6_ADDR_MATCH_PREFIX = 0xcb,
+    BPF_FUNC_BPF_IPV6_ADDR_IS_GLOBAL = 0xcc,
+    BPF_FUNC_BPF_IPV6_ADDR_NOT_SPECIF = 0xcd,
+    BPF_FUNC_BPF_IPV6_ADDR_EQUAL = 0xce,
+    BPF_FUNC_BPF_IPV6_NC_FROM_ADDR = 0xcf,
+    BPF_FUNC_BPF_IPV6_ADDR_FROM_STR = 0xe1,
+    
+
+    /* NETIF */
+    BPF_FUNC_BPF_GNRC_NETIF_GET_BY_PID = 0xd0,
+    BPF_FUNC_BPF_GNRC_NETIF_GET_BY_PREFIX = 0xd5,
+
+    BPF_FUNC_BPF_GNRC_NETIF_IPV6_ADDR_ADD_INTERNAL = 0xd1,
+    BPF_FUNC_BPF_GNRC_NETIF_IPV6_GET_IID = 0xd2,
+    BPF_FUNC_BPF_GNRC_NETIF_IPV6_ADDR_MATCH = 0xd3,
+    BPF_FUNC_BPF_FIND_INTERFACE_RPL_MCST = 0xd4,
+    BPF_FUNC_BPF_GNRC_NETIF_GET_IPV6_ADDR_BY_IDX = 0xd6,
+    BPF_FUNC_BPF_GNRC_NETIF_GET_BY_IPV6 = 0xd7,
+    BPF_FUNC_BPF_NETIF_GET_PID = 0xd8,
+
+// BPF_FUNC_BPF_
+};
+
+/* Helper structs */
+typedef struct {
+    __bpf_shared_ptr(void*, pkt);      /**< Opaque pointer to the coap_pkt_t struct */
+    __bpf_shared_ptr(uint8_t*, buf);   /**< Packet buffer */
+    size_t buf_len; /**< Packet buffer length */
+} bpf_coap_ctx_t;
+
+#ifdef __cplusplus
+}
+#endif
+#endif /* BPF_SHARED_H */
